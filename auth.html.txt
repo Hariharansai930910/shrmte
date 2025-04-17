@@ -1,0 +1,38 @@
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSy....",
+    authDomain: "shrmte.firebaseapp.com",
+    projectId: "shrmte",
+    ...
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById("loginBtn").onclick = async () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Logged in ✅");
+      window.location.href = "index.html";
+    } catch (err) {
+      alert("Login Failed: " + err.message);
+    }
+  };
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      console.log("Logged in as:", user.email);
+      localStorage.setItem("userEmail", user.email);
+    }
+  });
+</script>
+
+<!-- HTML Form -->
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button id="loginBtn">Login</button>
