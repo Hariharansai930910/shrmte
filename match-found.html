@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Match Found!</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-green-100 flex flex-col items-center justify-center h-screen">
+  <h1 class="text-3xl font-bold mb-4">🎉 Match Found!</h1>
+  <p class="text-lg">You take <span id="youSlices"></span> slices</p>
+  <p class="text-lg">Your buddy takes <span id="buddySlices"></span> slices</p>
+  <p class="text-md mt-4 italic">Time to place the order and say hi 👋</p>
+
+  <script>
+    const slices = localStorage.getItem("slices") || 4;
+    document.getElementById("youSlices").textContent = slices;
+    document.getElementById("buddySlices").textContent = 8 - slices;
+  </script>
+</body>
+</html>
