@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Wallet - SliceMate 💰</title>
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import { doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    const userEmail = localStorage.getItem("userEmail");
+    const walletDiv = document.getElementById("wallet");
+    const txTable = document.getElementById("transactions");
+
+    async function loadWallet() {
+      if (!userEmail) {
+        walletDiv.innerHTML = "❗ Please log in to view your wallet.";
+        return;
+      }
+
+      // Load wallet balance
+      const walletRef = doc(db, "users_wallets", userEmail);
+      const walletSnap = await getDoc(walletRef);
+
+      if (walletSnap.exists()) {
+        const data = walletSnap.data();
+        walletDiv.innerHTML = `<p class="text-2xl">Balance: ₹${data.balance}</p>`;
+      } else {
+        walletDiv.innerHTML = `<p class="text-xl text-red-500">Wallet not found.</p>`;
+      }
+
+      // Load transactions
+      const txRef = collection(db, "wallet_transactions");
+      const q = query(txRef, where("from", "==", userEmail));
+      const txSnap = await getDocs(q);
+
+      txSnap.forEach(doc => {
+        const tx = doc.data();
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="px-4 py-2">${tx.to}</td>
+          <td class="px-4 py-2">₹${tx.amount}</td>
+          <td class="px-4 py-2">${tx.type}</td>
+          <td class="px-4 py-2">${new Date(tx.timestamp).toLocaleString()}</td>
+        `;
+        txTable.appendChild(row);
+      });
+    }
+
+    window.onload = loadWallet;
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-center py-12">
+  <h1 class="text-3xl font-bold mb-6">💳 My SliceMate Wallet</h1>
+  <div id="wallet" class="mb-6 text-xl text-green-700 font-semibold"></div>
+
+  <h2 class="text-xl font-semibold mb-4">Recent Transactions</h2>
+  <table class="table-auto mx-auto bg-white shadow-md rounded">
+    <thead>
+      <tr class="bg-gray-200 text-left">
+        <th class="px-4 py-2">To</th>
+        <th class="px-4 py-2">Amount</th>
+        <th class="px-4 py-2">Type</th>
+        <th class="px-4 py-2">Time</th>
+      </tr>
+    </thead>
+    <tbody id="transactions"></tbody>
+  </table>
+</body>
+</html>
