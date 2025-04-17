@@ -28,8 +28,10 @@ window.goToMatch = async function () {
 
         localStorage.setItem("slices", sliceCount);
         localStorage.setItem("matchPref", preference);
+        localStorage.setItem("userEmail", user.email);
 
-        window.location.href = "match.html";
+        // ✅ REDIRECT TO WAITING PAGE
+        window.location.href = "waiting.html";
       } catch (error) {
         console.error("Error writing document: ", error);
         alert("⚠️ Could not submit match request.");
