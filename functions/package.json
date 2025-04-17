@@ -1,0 +1,20 @@
+{
+  "name": "functions",
+  "description": "Cloud Functions for SliceMate",
+  "scripts": {
+    "lint": "echo 'Lint skipped'",
+    "build": "echo 'Build skipped'",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.10.0",
+    "firebase-functions": "^4.4.1"
+  },
+  "private": true
+}
